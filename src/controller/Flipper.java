@@ -61,10 +61,34 @@ public class Flipper {
 
     private void endGame() {
         System.out.println("Spiel beendet. Dein Punktestand: " + score);
-        // Weitere Logik für Spielende
+        askForNewGame();
+    }
+
+    private void askForNewGame() {
+        try (Scanner scanner = new Scanner(System.in)) {
+            System.out.println("Möchtest du noch einmal spielen? (ja/nein)");
+            String antwort = scanner.nextLine().toLowerCase();
+
+            if ("ja".equals(antwort)) {
+                resetGame();
+                showStatusAndAskForCoin();
+            } else {
+                System.out.println("Danke fürs Spielen!");
+                // Optional: Schließe Ressourcen, beende Programm etc.
+            }
+        }
+    }
+
+    private void resetGame() {
+        // Setze das Spiel zurück (Punktestand, Ballposition, usw.)
+        score = 0;
+        ballsLeft = 3; // Oder ein anderer Anfangswert
+        this.state = new NoCreditState(this);
+        // Weitere Reset-Logik...
     }
 
     private boolean isGameRunning = false;
+    private float maxY = 7; // Beispielwert
 
     public void gameLoop() {
         while (isGameRunning) {
@@ -73,8 +97,9 @@ public class Flipper {
                 checkCollision(element);
             }
             updateDisplay();
-            if (ball.getY() < 10000) {
+            if (ball.getY() > maxY) {
                 isGameRunning = false;
+                endGame();
             }
         }
     }
