@@ -1,29 +1,31 @@
 package model;
-import controller.FlipperElementVisitor;
 
 public class Bumper implements FlipperElement {
-    private float x, y; // Position des Bumpers
+    private int points;
 
-    public Bumper(float xPosBumper, float yPosBumper) {
+    public Bumper(float x, float y, int points) {
+        this.points = points;
     }
 
     @Override
     public void hit() {
-        System.out.println("Bumper getroffen! Punkte erhöht.");
-        // Implementiere die Logik zur Punkteerhöhung
+        System.out.println("Element getroffen! Punkte erhöht.");
+        GameDirector.getInstance().addScore(points);
     }
 
-    public void accept(FlipperElementVisitor visitor) {
-        visitor.visit(this);
-    }
+    private float y;
 
     @Override
     public float getX() {
+        float x = 0.0f; // Initialize x with a default value
         return x;
     }
 
     @Override
     public float getY() {
+        float y = 0.0f; // Initialize x with a default value
+
         return y;
     }
+
 }

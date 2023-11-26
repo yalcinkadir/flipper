@@ -11,6 +11,7 @@ import model.Ball;
 import model.Bumper;
 import model.Target;
 import model.FlipperElement;
+import model.GameDirector;
 import view.Display;
 import view.DisplayFactory;
 
@@ -18,7 +19,6 @@ public class Flipper {
     private State state;
     private Ball ball;
     private Display display;
-    private int score;
     private int ballsLeft;
     private List<FlipperElement> elements = new ArrayList<>();
 
@@ -29,7 +29,7 @@ public class Flipper {
         float yPosTarget = 150; // Beispielwert für die Y-Position eines Ziels
         int points = 10; // Beispielwert für die Punkte eines Ziels
 
-        elements.add(new Bumper(xPosBumper, yPosBumper));
+        elements.add(new Bumper(xPosBumper, yPosBumper, points));
         elements.add(new Target(xPosTarget, yPosTarget, points));
         // Weitere Flipper-Elemente hinzufügen
         this.state = new NoCreditState(this);
@@ -60,7 +60,7 @@ public class Flipper {
     }
 
     private void endGame() {
-        System.out.println("Spiel beendet. Dein Punktestand: " + score);
+        System.out.println("Spiel beendet. Dein Punktestand: " + GameDirector.getInstance().getScore());
         askForNewGame();
     }
 
@@ -80,9 +80,8 @@ public class Flipper {
     }
 
     private void resetGame() {
-        // Setze das Spiel zurück (Punktestand, Ballposition, usw.)
-        score = 0;
-        ballsLeft = 3; // Oder ein anderer Anfangswert
+        ballsLeft = 3;
+        GameDirector.getInstance().resetScore();
         this.state = new NoCreditState(this);
         // Weitere Reset-Logik...
     }
@@ -97,11 +96,27 @@ public class Flipper {
                 checkCollision(element);
             }
             updateDisplay();
+
+            // Überprüfe, ob der Ball verloren ist
             if (ball.getY() > maxY) {
-                isGameRunning = false;
-                endGame();
+                ballsLeft--;
+                if (ballsLeft <= 0) {
+                    isGameRunning = false;
+                    endGame();
+                } else {
+                    // Reset Ball und weiter spielen
+                    resetBall();
+                }
             }
         }
+    }
+
+    private void resetBall() {
+        float startX = 0; // Anfangsposition X
+        float startY = 0; // Anfangsposition Y
+        float startVx = 1; // Anfangsgeschwindigkeit X
+        float startVy = 1; // Anfangsgeschwindigkeit Y
+        ball = new Ball(startX, startY, startVx, startVy);
     }
 
     private static final float COLLISION_THRESHOLD = 1.0f; // Beispielwert
@@ -133,6 +148,7 @@ public class Flipper {
     public void updateDisplay() {
         if (display != null) {
             display.render();
+            System.out.println("Punktestand: " + GameDirector.getInstance().getScore() + " | Verbleibende Bälle: " + ballsLeft);
         } else {
             System.out.println("Display ist nicht initialisiert.");
         }
@@ -175,4 +191,5 @@ public class Flipper {
             }
         }
     }
+
 }

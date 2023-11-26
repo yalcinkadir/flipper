@@ -1,9 +1,11 @@
 package model;
+
 public class GameDirector {
     private static GameDirector instance;
+    private int score;
 
     private GameDirector() {
-        // Private Konstruktor verhindert externe Instanziierung
+        score = 0;
     }
 
     public static GameDirector getInstance() {
@@ -13,5 +15,16 @@ public class GameDirector {
         return instance;
     }
 
-    // Weitere Methoden zur Spielführung
+    public void addScore(int points) {
+        score += points;
+        System.out.println("Aktueller Punktestand: " + score);
+    }
+
+    public void resetScore() {
+        score = 0;
+    }
+
+    public int getScore() {
+        return score;
+    }
 }
