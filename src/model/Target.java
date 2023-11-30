@@ -12,7 +12,6 @@ public class Target implements FlipperElement {
         this.x = x;
         this.y = y;
         this.points = points;
-        this.radius = radius;
         this.lastHitTime = System.currentTimeMillis() - COOLDOWN_PERIOD;
 
     }
@@ -29,7 +28,6 @@ public class Target implements FlipperElement {
         System.out.println("Letzter Treffer: " + lastHitTime);
         System.out.println("Zeit seit letztem Treffer: " + (currentTime - lastHitTime) + "ms");
     
-        if (currentTime - lastHitTime > COOLDOWN_PERIOD) {
         if (currentTime - lastHitTime > COOLDOWN_PERIOD) {
             System.out.println("Kollision erkannt Target");
             System.out.println("Element getroffen! Punkte erhöht.");

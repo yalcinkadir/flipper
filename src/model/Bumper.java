@@ -8,7 +8,6 @@ public class Bumper implements FlipperElement {
 
     public Bumper(float x, float y, int points) {
         this.points = points;
-        this.radius = radius;
         this.lastHitTime = System.currentTimeMillis() - COOLDOWN_PERIOD;
     }
 
