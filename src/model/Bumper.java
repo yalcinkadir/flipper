@@ -19,7 +19,7 @@ public class Bumper implements FlipperElement {
     public void hit() {
         long currentTime = System.currentTimeMillis();
         if (currentTime - lastHitTime > COOLDOWN_PERIOD) {
-            System.out.println("Kollision erkannt Bumper");
+            System.out.println("Kollision erkannt");
             System.out.println("Element getroffen! Punkte erhöht.");
             GameDirector.getInstance().addScore(points);
             System.out.println("Punktestand: " + GameDirector.getInstance().getScore());

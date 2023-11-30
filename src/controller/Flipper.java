@@ -46,9 +46,9 @@ public class Flipper {
         float startX = 0;
         float startY = 0;
         float startVx = 1;
-        float startVy = 1;
+        float startVy = 0.1f;
         float ballRadius = 10.0f;
-    
+
         ball = new Ball(startX, startY, startVx, startVy, ballRadius);
         isGameRunning = true;
 
@@ -59,6 +59,7 @@ public class Flipper {
     private void endGame() {
         System.out.println("Spiel beendet. Dein Punktestand: " + GameDirector.getInstance().getScore());
         askForNewGame();
+        isGameRunning = false;
     }
 
     private void askForNewGame() {
@@ -67,18 +68,17 @@ public class Flipper {
             String antwort = scanner.nextLine().toLowerCase();
 
             if ("ja".equals(antwort)) {
-                resetGame();
-                showStatusAndAskForCoin();
+                restartGame();
             } else {
                 System.out.println("Danke fürs Spielen!");
+                System.exit(0);
             }
         }
     }
 
-    private void resetGame() {
-        ballsLeft = 3;
-        GameDirector.getInstance().resetScore();
-        this.state = new NoCreditState(this);
+    private void restartGame() {
+        Flipper flipper = new Flipper();
+        flipper.showStatusAndAskForCoin();
     }
 
     private boolean isGameRunning = false;
@@ -91,12 +91,24 @@ public class Flipper {
                 checkCollision(element);
             }
             updateDisplay();
+            System.out.println("Ballposition: " + ball.getX() + ", " + ball.getY());
+            System.out.println("Ballsleft: " + ballsLeft);
 
             if (ball.getY() > maxY) {
                 ballsLeft--;
+                System.out.println("Ball verloren. Verbleibende Bälle: " + ballsLeft);
+
+            } else {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
                 if (ballsLeft <= 0) {
                     isGameRunning = false;
                     endGame();
+                    break;
                 } else {
                     resetBall();
                 }
@@ -118,14 +130,12 @@ public class Flipper {
         float distanceY = Math.abs(ball.getY() - element.getY());
         float elementRadius = element instanceof Target ? ((Target) element).getRadius() : 10.0f;
         float maxDistance = ball.getRadius() + elementRadius;
-    
+
         if (distanceX < maxDistance && distanceY < maxDistance) {
             ball.bounceOff();
             element.hit();
         }
     }
-    
-
 
     public static void main(String[] ags) {
         printWelcomeMessage();
