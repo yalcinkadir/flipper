@@ -23,19 +23,17 @@ public class Flipper {
     private List<FlipperElement> elements = new ArrayList<>();
 
     public Flipper() {
-        float xPosBumper = 50; // Beispielwert für die X-Position eines Bumpers
-        float yPosBumper = 100; // Beispielwert für die Y-Position eines Bumpers
-        float xPosTarget = 200; // Beispielwert für die X-Position eines Ziels
-        float yPosTarget = 150; // Beispielwert für die Y-Position eines Ziels
-        int points = 10; // Beispielwert für die Punkte eines Ziels
+        float xPosBumper = 50;
+        float yPosBumper = 100;
+        float xPosTarget = 200;
+        float yPosTarget = 150;
+        int points = 10;
 
         elements.add(new Bumper(xPosBumper, yPosBumper, points));
         elements.add(new Target(xPosTarget, yPosTarget, points));
-        // Weitere Flipper-Elemente hinzufügen
         this.state = new NoCreditState(this);
         DisplayFactory factory = new AsciiDisplayFactory();
         this.display = factory.createDisplay();
-        // Rest des Konstruktors...
     }
 
     public void checkEndCondition() {
@@ -45,14 +43,13 @@ public class Flipper {
     }
 
     public void startGame() {
-
-        float startX = 0; // Anfangsposition X
-        float startY = 0; // Anfangsposition Y
-        float startVx = 1; // Anfangsgeschwindigkeit X
-        float startVy = 1; // Anfangsgeschwindigkeit Y
-        // Starte das Spiel
-        // Aktiviere Spielmechaniken wie Flippers, Ballfreigabe etc.
-        ball = new Ball(startX, startY, startVx, startVy);
+        float startX = 0;
+        float startY = 0;
+        float startVx = 1;
+        float startVy = 1;
+        float ballRadius = 10.0f;
+    
+        ball = new Ball(startX, startY, startVx, startVy, ballRadius);
         isGameRunning = true;
 
         System.out.println("Das Spiel hat begonnen!");
@@ -74,7 +71,6 @@ public class Flipper {
                 showStatusAndAskForCoin();
             } else {
                 System.out.println("Danke fürs Spielen!");
-                // Optional: Schließe Ressourcen, beende Programm etc.
             }
         }
     }
@@ -83,11 +79,10 @@ public class Flipper {
         ballsLeft = 3;
         GameDirector.getInstance().resetScore();
         this.state = new NoCreditState(this);
-        // Weitere Reset-Logik...
     }
 
     private boolean isGameRunning = false;
-    private float maxY = 7; // Beispielwert
+    private float maxY = 7;
 
     public void gameLoop() {
         while (isGameRunning) {
@@ -97,14 +92,12 @@ public class Flipper {
             }
             updateDisplay();
 
-            // Überprüfe, ob der Ball verloren ist
             if (ball.getY() > maxY) {
                 ballsLeft--;
                 if (ballsLeft <= 0) {
                     isGameRunning = false;
                     endGame();
                 } else {
-                    // Reset Ball und weiter spielen
                     resetBall();
                 }
             }
@@ -112,22 +105,27 @@ public class Flipper {
     }
 
     private void resetBall() {
-        float startX = 0; // Anfangsposition X
-        float startY = 0; // Anfangsposition Y
-        float startVx = 1; // Anfangsgeschwindigkeit X
-        float startVy = 1; // Anfangsgeschwindigkeit Y
-        ball = new Ball(startX, startY, startVx, startVy);
+        float startX = 0;
+        float startY = 0;
+        float startVx = 1;
+        float startVy = 1;
+        float ballRadius = 10.0f;
+        ball = new Ball(startX, startY, startVx, startVy, ballRadius);
     }
-
-    private static final float COLLISION_THRESHOLD = 1.0f; // Beispielwert
 
     public void checkCollision(FlipperElement element) {
-        if (Math.abs(ball.getX() - element.getX()) < COLLISION_THRESHOLD &&
-                Math.abs(ball.getY() - element.getY()) < COLLISION_THRESHOLD) {
-            ball.bounceOff(); // Implementiere diese Methode in Ball
-            element.hit(); // Erhöht Punktzahl oder führt andere Aktionen durch
+        float distanceX = Math.abs(ball.getX() - element.getX());
+        float distanceY = Math.abs(ball.getY() - element.getY());
+        float elementRadius = element instanceof Target ? ((Target) element).getRadius() : 10.0f;
+        float maxDistance = ball.getRadius() + elementRadius;
+    
+        if (distanceX < maxDistance && distanceY < maxDistance) {
+            ball.bounceOff();
+            element.hit();
         }
     }
+    
+
 
     public static void main(String[] ags) {
         printWelcomeMessage();
@@ -148,7 +146,8 @@ public class Flipper {
     public void updateDisplay() {
         if (display != null) {
             display.render();
-            System.out.println("Punktestand: " + GameDirector.getInstance().getScore() + " | Verbleibende Bälle: " + ballsLeft);
+            System.out.println(
+                    "Punktestand: " + GameDirector.getInstance().getScore() + " | Verbleibende Bälle: " + ballsLeft);
         } else {
             System.out.println("Display ist nicht initialisiert.");
         }
@@ -168,7 +167,7 @@ public class Flipper {
 
     public void showStatusAndAskForCoin() {
         try (Scanner scanner = new Scanner(System.in)) {
-            while (true) { // Hält das Programm in einer Schleife, um auf Eingaben zu warten
+            while (true) {
                 System.out.println("Aktueller Zustand: " + state.getClass().getSimpleName());
                 if (state instanceof NoCreditState) {
                     System.out.println("Drücken Sie C um eine Münze einzuwerfen.");
@@ -183,7 +182,7 @@ public class Flipper {
                     String input = scanner.nextLine().toUpperCase();
                     if (input.equals("S")) {
                         play();
-                        break; // Beendet die Schleife, wenn das Spiel gestartet wird
+                        break;
                     } else {
                         System.out.println("Ungültige Eingabe. Drücken Sie S, um das Spiel zu starten.");
                     }

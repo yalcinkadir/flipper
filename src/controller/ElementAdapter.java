@@ -11,19 +11,16 @@ public class ElementAdapter implements FlipperElement {
 
     @Override
     public void hit() {
-        // Die hit Methode ruft die activate Methode des inkompatiblen Elements auf.
         incompatibleElement.activate();
     }
 
     @Override
     public float getX() {
-        // Implementiere die Methode
-        return 0; // Rückgabewert als Platzhalter
+        return 0;
     }
 
     @Override
     public float getY() {
-        // Implementiere die Methode
-        return 0; // Rückgabewert als Platzhalter
+        return 0;
     }
 }

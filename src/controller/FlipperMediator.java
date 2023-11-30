@@ -12,8 +12,6 @@ public class FlipperMediator {
     }
 
     public void elementHit(FlipperElement element) {
-        // Logik zur Behandlung von Interaktionen zwischen Elementen
         System.out.println("Element " + element.getClass().getSimpleName() + " getroffen.");
-        // Weitere spezifische Logik hier implementieren
     }
 }

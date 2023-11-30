@@ -14,7 +14,6 @@ public class ReadyState extends State {
     @Override
     public void play() {
         System.out.println("Spiel startet. Viel Spaß!");
-        // Hier die Logik für die Ballfreigabe und den Start der Spielmechaniken
         getFlipper().startGame();
     }
 }

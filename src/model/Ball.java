@@ -1,25 +1,28 @@
 package model;
 
 public class Ball {
-    private float x, y; // Position des Balls
-    private float vx, vy; // Geschwindigkeit des Balls in X- und Y-Richtung
+    private float x, y;
+    private float vx, vy;
+    private float radius;
 
-    // Konstruktor und Methoden für die Ballbewegung
-    public Ball(float x, float y, float vx, float vy) {
+    public Ball(float x, float y, float vx, float vy, float radius) {
         this.x = x;
         this.y = y;
         this.vx = vx;
         this.vy = vy;
+        this.radius = radius;
+    }
+
+    public float getRadius() {
+        return radius;
     }
 
     public void updatePosition() {
         x += vx;
         y += vy;
-        // Hier könntest du auch Kollisionserkennung und -reaktion implementieren
     }
 
     public void bounceOff() {
-        // Einfache Umkehr der Richtung als Beispiel
         vx = -vx;
         vy = -vy;
     }
@@ -38,7 +41,6 @@ public class Ball {
     }
 
     public void checkCollision(FlipperElement element) {
-        // Logik zur Erkennung der Kollision und Reaktion darauf
     }
 
 }
