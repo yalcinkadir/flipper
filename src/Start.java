@@ -1,4 +1,3 @@
-// Keine Paketdeklaration hier
 import controller.Flipper;
 
 public class Start {
